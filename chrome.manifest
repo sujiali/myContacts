@@ -1,0 +1,4 @@
+content	myContact			content/
+skin	myContact	classic skin/
+locale	myContact	en-US	locale/en-US/
+overlay	chrome://browser/content/browser.xul	chrome://myContact/content/overlay.xul
