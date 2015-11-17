@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Komodo Project File - DO NOT EDIT -->
 <project id="43c85879-2085-41f1-b077-cffa5871f937" kpf_version="5" name="MyContacts.komodoproject">
+<preference-set idref="43c85879-2085-41f1-b077-cffa5871f937" id="project" preftype="project">
+  <boolean id="editShowMinimap">0</boolean>
+</preference-set>
 </project>

@@ -5,9 +5,9 @@ var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
 var dbConn = Services.storage.openDatabase(file); // Will also create the file
 // if it does not exist
 var statement = dbConn.createStatement("SELECT * FROM text");
-
 statement.executeAsync({
 	handleResult : function(aResultSet) {
+		console.log(aResultSet);
 		for (let row = aResultSet.getNextRow(); row; row = aResultSet
 				.getNextRow()) {
 			var value = row.getResultByName("Tel");
