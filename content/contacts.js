@@ -7,6 +7,7 @@ var dbConn = Services.storage.openDatabase(file); // Will also create the file
 var statement = dbConn.createStatement("SELECT * FROM text");
 statement.executeAsync({
 	handleResult : function(aResultSet) {
+		// add comment
 		console.log(aResultSet);
 		for (let row = aResultSet.getNextRow(); row; row = aResultSet
 				.getNextRow()) {
