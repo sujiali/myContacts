@@ -3,7 +3,7 @@ Components.utils.import("resource://gre/modules/FileUtils.jsm");
 
 var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
 var dbConn = Services.storage.openDatabase(file); // Will also create the file
-// if it does not exist
+// if it does not exist it blala
 var statement = dbConn.createStatement("SELECT * FROM text");
 statement.executeAsync({
 	handleResult : function(aResultSet) {
