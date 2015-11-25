@@ -3,23 +3,18 @@
 "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 <window id="YourApplication_window" windowtype="YourApplication" title="YourApplication" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" width="800" height="600" screenX="20" screenY="20" persist="screenX screenY width height">
-  <tree id="photosList" flex="1" datasources="profile:test1.sqlite" ref="*" querytype="storage" flags="dont-build-content">
-    <treecols>
-      <treecol id="fn" label="Full Name" flex="2" />
-      <treecol id="tel" label="Tel Number" flex="1" />
-    </treecols>
+  <tree id="photosList" flex="1" datasources="profile:test1.sqlite" ref="*" querytype="storage">
+    <treecols id="mycols"></treecols>
     <template>
-      <query>select FullName, Tel from text</query>
+      <query>select * from text</query>
       <action>
         <treechildren>
           <treeitem uri="?">
-            <treerow>
-              <treecell label="?FullName" />
-              <treecell label="?Tel" />
-            </treerow>
+            <treerow id="mycells"></treerow>
           </treeitem>
         </treechildren>
       </action>
     </template>
   </tree>
+  <script type="application/x-javascript" src="contacts.js" />
 </window>

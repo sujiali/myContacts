@@ -1,0 +1,37 @@
+//statement.executeAsync({
+//	handleResult: function(aResultSet) {
+//		for (let row = aResultSet.getNextRow(); row; row = aResultSet.getNextRow()) {
+//			fieldname.push(row.getResultByName("name"));
+//		}
+//	},
+//
+//	handleError: function(aError) {
+//		print("Error: " + aError.message);
+//	},
+//
+//	handleCompletion: function(aReason) {
+//		if (aReason != Components.interfaces.mozIStorageStatementCallback.REASON_FINISHED)
+//			print("Query canceled or aborted!");
+//	}
+//});
+
+
+<!--
+      <treecol label="old_id" flex="1" />
+      <treecol label="FullName" flex="2" />
+      <treecol label="Tel" flex="3" /> 
+    <template>
+      <query>select * from text</query>
+      <action>
+        <treechildren>
+          <treeitem uri="?">
+            <treerow id="mycells">
+                    <treecell label="?old_id" />
+              <treecell label="?FullName" />
+              <treecell label="?Tel" />
+            </treerow>
+          </treeitem>
+        </treechildren>
+      </action>
+    </template>
+-->

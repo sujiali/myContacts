@@ -9,5 +9,4 @@
 	<menupopup id="menu_ToolsPopup">
 		<menuitem id="menu_Gb2big" label="ccccc"  oncommand="openUILinkIn('chrome://myContacts/content/newwin.xul', 'tab')"></menuitem>
 	</menupopup>
-	 <script type="application/x-javascript" src="contacts.js" />
 </overlay>
