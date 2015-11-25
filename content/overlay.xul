@@ -5,5 +5,9 @@
 
 <!DOCTYPE window SYSTEM "chrome://myContacts/locale/Contacts.dtd">
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-	<script type="application/x-javascript" src="contacts.js"/>
+	<!-- Firefox Tools Menu -->	
+	<menupopup id="menu_ToolsPopup">
+		<menuitem id="menu_Gb2big" label="ccccc"  oncommand="window.open('newwin.xul')"></menuitem>
+	</menupopup>
+	<script type="application/x-javascript" src="gb2big.js"></script>
 </overlay>
