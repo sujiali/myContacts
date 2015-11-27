@@ -3,5 +3,6 @@
 <project id="43c85879-2085-41f1-b077-cffa5871f937" kpf_version="5" name="MyContacts.komodoproject">
 <preference-set idref="43c85879-2085-41f1-b077-cffa5871f937" id="project" preftype="project">
   <boolean id="editShowMinimap">0</boolean>
+  <string relative="path" id="import_dirname"></string>
 </preference-set>
 </project>

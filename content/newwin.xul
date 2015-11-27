@@ -12,11 +12,11 @@
       </action>
     </template>
   </listbox>
-  <button label="Press Me" oncommand="dosql();"/>
-  <tree id="photosList" flex="1" datasources="profile:test1.sqlite" ref="*" querytype="storage">
+  <button label="Press Me" oncommand="dosql();" />
+  <tree id="mytree" flex="1" datasources="profile:test1.sqlite" ref="*" querytype="storage">
     <treecols id="mycols"></treecols>
     <template>
-      <query id="q1">select * from text</query>
+      <query id="q1">SELECT * FROM text</query>
       <action>
         <treechildren>
           <treeitem uri="?">
@@ -26,5 +26,6 @@
       </action>
     </template>
   </tree>
-  <script type="application/x-javascript" src="contacts.js" />
+  <button label="change" oncommand="var somefile=68;" />
+  <script type="application/x-javascript" src="newwin.js" />
 </window>

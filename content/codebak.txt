@@ -35,3 +35,5 @@
       </action>
     </template>
 -->
+
+<query id="q1">SELECT text.* FROM text, revision WHERE revision.rev_page=70 And revision.rev_text_id=text.old_id;</query>

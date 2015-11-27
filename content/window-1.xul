@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE window PUBLIC "-//MOZILLA//DTD XUL V1.0//EN"
+"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<window id="YourApplication_window" windowtype="YourApplication" title="YourApplication" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" width="800" height="600" screenX="20" screenY="20" persist="screenX screenY width height">
+    <tree id="mytree" flex="1">
+        <treecols>
+            <treecol id="sender" label="Sender" flex="1" />
+            <treecol id="subject" label="Subject" flex="2" />
+        </treecols>
+        <treechildren>
+            <treeitem>
+                <treerow>
+                    <treecell label="joe@somewhere.com" />
+                    <treecell label="Top secret plans" />
+                </treerow>
+            </treeitem>
+            <treeitem>
+                <treerow>
+                    <treecell label="mel@whereever.com" />
+                    <treecell label="Let's do lunch" />
+                </treerow>
+            </treeitem>
+        </treechildren>
+    </tree>
+    <script type="application/x-javascript" src="Javascript-1.js" />
+</window>

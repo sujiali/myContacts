@@ -36,11 +36,12 @@ function dosql() {
 		tcol.setAttribute("label", fieldname[i]);
 		tcol.setAttribute("flex", i);
 		mycols.appendChild(tcol);
+		
 		let tcell = document.createElement("treecell");
 		tcell.setAttribute("label", "?" + fieldname[i]);
 		mycells.appendChild(tcell);
 	}
-	document.getElementById("photosList").builder.rebuild();
+	document.getElementById("mytree").builder.rebuild();
 }
 
 function removeAllChild(obj) {
@@ -48,3 +49,9 @@ function removeAllChild(obj) {
 		obj.removeChild(obj.firstChild);
 	}
 }
+
+var mytree = document.getElementById("mytree");
+mytree.addEventListener("dblclick", function(event) {
+    let selectrecord=(mytree.view.getCellText(mytree.currentIndex, mytree.columns.getColumnAt(0)));
+    window.openDialog('chrome://myContacts/content/update.xul','showmore','chrome,width=600,height=300',selectrecord);
+}, true);
