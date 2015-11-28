@@ -2,11 +2,11 @@
 <!--File Name: overlay.xul-->
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 <?xml-stylesheet href="chrome://myContacts/skin/Contacts.css" type="text/css"?>
-
 <!DOCTYPE window SYSTEM "chrome://myContacts/locale/Contacts.dtd">
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-	<!-- Firefox Tools Menu -->	
+	<!-- Firefox Tools Menu -->
 	<menupopup id="menu_ToolsPopup">
-		<menuitem id="menu_Gb2big" label="ccccc"  oncommand="openUILinkIn('chrome://myContacts/content/newwin.xul', 'tab')"></menuitem>
+		<menuitem id="openContacts" label="Open Contacts" oncommand="openUILinkIn('chrome://myContacts/content/newwin.xul', 'tab')"></menuitem>
+		<menuitem id="testwin" label="Open Test Window" oncommand="openUILinkIn('chrome://myContacts/content/window-1.xul', 'tab')"></menuitem>
 	</menupopup>
 </overlay>

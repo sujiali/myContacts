@@ -37,3 +37,24 @@
 -->
 
 <query id="q1">SELECT text.* FROM text, revision WHERE revision.rev_page=70 And revision.rev_text_id=text.old_id;</query>
+
+
+	//var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
+	//var fieldname = new Array();
+	//var dbConn = Services.storage.openDatabase(file); // Will also create the file if it does not exist
+	//
+	//// get field name
+	//var statement = dbConn.createStatement("PRAGMA table_info([text])");
+	//while (statement.executeStep()) {
+	//	fieldname.push(statement.row.name);
+	//}
+
+	// var fieldname = ["old_id", "FullName", "Tel"];
+	// console.log(fieldname);
+	// console.log(fieldname.length);
+        
+        
+        
+        
+        //Components.utils.import("resource://gre/modules/Services.jsm");
+//Components.utils.import("resource://gre/modules/FileUtils.jsm");
