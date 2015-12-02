@@ -6,7 +6,7 @@
 <dialog id="donothing" title="Dialog example" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" persist="screenX screenY width height" buttons="accept,cancel" ondialogaccept="return doOK();" ondialogcancel="return doCancel();">
     <vbox id="myvbox">
         <hbox>
-            <button id="switchRead" label="" oncommand="statusChange()" />
+            <button id="switchRead" label="" oncommand="switchStatus()" />
         </hbox>
         <label id="tid" value="" />
         <label control="fullname" value="Name" />

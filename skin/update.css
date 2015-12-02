@@ -5,3 +5,7 @@
 }
 .edit_style input {
 }
+
+#appcontent tabbox {
+  -moz-box-direction: reverse;
+}

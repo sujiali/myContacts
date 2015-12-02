@@ -4,34 +4,42 @@
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 <?xml-stylesheet href="chrome://myContacts/skin/contacts.css" type="text/css"?>
 <window id="YourApplication_window" windowtype="YourApplication" title="YourApplication" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" width="800" height="600" screenX="20" screenY="20" persist="screenX screenY width height">
-  <hbox flex="1">
-    <vbox flex="1">
-      <listbox flex="1" id="mylist" datasources="profile:test1.sqlite" ref="*" querytype="storage">
+  <vbox flex="1">
+    <hbox>
+      <button label="New Contact" oncommand="addnew();" />
+    </hbox>
+    <hbox flex="1">
+      <listbox id="mylist" datasources="profile:test1.sqlite" ref="*" querytype="storage">
+        <listitem label="All" />
         <template>
-          <query>PRAGMA table_info([text])</query>
+          <query>select * from tags</query>
           <action>
-            <listitem checked="true" type="checkbox" uri="?" label="?name" />
+            <listitem uri="?" label="?tagname" />
           </action>
         </template>
       </listbox>
-      <button label="Get contacts" oncommand="openlist();" />
-      <button label="New Contact" oncommand="addnew();" />
-    </vbox>
-    <vbox flex="4">
-      <tree id="mytree" flex="1" datasources="profile:test1.sqlite" ref="*" querytype="storage">
-        <treecols id="mycols"></treecols>
-        <template>
-          <query id="q1">SELECT * FROM text</query>
-          <action>
+      <tree id="mytree" flex="6" datasources="profile:test1.sqlite" ref="*" querytype="storage">
+        <treecols id="mycols">
+          <treecol flex="1" label="id" />
+          <treecol flex="2" label="name" />
+          <treecol flex="3" label="tel" />
+        </treecols>
+        <template id="mytemplate">
+          <query id="myquery">SELECT * FROM text</query>
+          <action id="myaction">
             <treechildren>
               <treeitem uri="?">
-                <treerow id="mycells"></treerow>
+                <treerow>
+                  <treecell label="?old_id" />
+                  <treecell label="?FullName" />
+                  <treecell label="?Tel" />
+                </treerow>
               </treeitem>
             </treechildren>
           </action>
         </template>
       </tree>
-    </vbox>
-  </hbox>
+    </hbox>
+  </vbox>
   <script type="application/x-javascript" src="newwin.js" />
 </window>

@@ -1,38 +1,40 @@
 <?xml version="1.0"?>
-<!DOCTYPE window PUBLIC "-//MOZILLA//DTD XUL V1.0//EN"
-"http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
-<?xml-stylesheet href="chrome://myContacts/skin/newone.css" type="text/css"?>
-<window id="YourApplication_window" windowtype="YourApplication" title="YourApplication" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" width="800" height="600" screenX="20" screenY="20" persist="screenX screenY width height">
-    <vbox id="myvbox">
-        <hbox>
-            <button label="Edit" oncommand="editSwitch()" />
-        </hbox>
-        <label id="tid" value="" />
-        <label control="fullname" value="Name" />
-        <textbox class="redbox" id="fullname" value="abc" />
-        <label control="tel" value="Tel" />
-        <textbox id="tel" value="abcd" />
-    </vbox>
-    <tree id="mytree" flex="1">
-        <treecols>
-            <treecol id="sender" label="Sender" flex="1" />
-            <treecol id="subject" label="Subject" flex="2" />
-        </treecols>
-        <treechildren>
-            <treeitem>
-                <treerow>
-                    <treecell label="joe@somewhere.com" />
-                    <treecell label="Top secret plans" />
-                </treerow>
-            </treeitem>
-            <treeitem>
-                <treerow>
-                    <treecell label="mel@whereever.com" />
-                    <treecell label="Let's do lunch" />
-                </treerow>
-            </treeitem>
-        </treechildren>
-    </tree>
-    <script type="application/x-javascript" src="Javascript-1.js" />
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<window title="Tree Example" id="tree-window"
+   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+   onload="setView();">
+
+<script>
+//Moz 1.8
+var treeView = {
+    rowCount : 10000,
+    getCellText : function(row,column){
+      if (column.id == "namecol") return "Row "+row;
+      else return "February 18";
+    },
+    setTree: function(treebox){ this.treebox = treebox; },
+    isContainer: function(row){ return false; },
+    isSeparator: function(row){ return false; },
+    isSorted: function(){ return false; },
+    getLevel: function(row){ return 0; },
+    getImageSrc: function(row,col){ return null; },
+    getRowProperties: function(row,props){},
+    getCellProperties: function(row,col,props){},
+    getColumnProperties: function(colid,col,props){}
+};
+
+function setView(){
+    document.getElementById('my-tree').view = treeView;
+}
+</script>
+
+<tree id="my-tree" flex="1">
+  <treecols>
+    <treecol id="namecol" label="Name" flex="1"/>
+    <treecol id="datecol" label="Date" flex="1"/>
+  </treecols>
+  <treechildren/>
+</tree>
+
 </window>
