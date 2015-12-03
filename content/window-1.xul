@@ -1,26 +1,30 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
 <!DOCTYPE window>
-<window title="Sorting a custom tree view example" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-    <tree rows="6" id="mytree">
-        <treecols>
-            <treecol id="firstname" label="First Name" primary="true" flex="3" />
-            <treecol id="lastname" label="Last Name" flex="7" />
-        </treecols>
-        <treechildren>
-            <treeitem>
-                <treerow>
-                    <treecell label="Bob" />
-                    <treecell label="Carpenter" />
-                </treerow>
-            </treeitem>
-            <treeitem>
-                <treerow>
-                    <treecell label="Jerry" />
-                    <treecell label="Hodge" />
-                </treerow>
-            </treeitem>
-        </treechildren>
-    </tree>
-    <script type="application/javascript" src="JavaScript-1.js" />
+
+<window
+	title="Sorting a custom tree view example"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	onload="init()">
+	
+	<script type="application/javascript" src="sort.js"/>
+
+	<hbox align="center" id="search-box">
+		<label accesskey="F" control="filter">Filter</label>
+		<textbox id="filter" oninput="inputFilter(event)" flex="1"/>
+		<button id="clearFilter" oncommand="clearFilter()" label="Clear" accesskey="C" disabled="true"/>
+	</hbox>
+
+	<tree id="tree" flex="1" persist="sortDirection sortResource" sortDirection="ascending" sortResource="description">
+		<treecols>
+			<treecol id="name" label="Name" flex="1" persist="width ordinal hidden" onclick="sort(this)" class="sortDirectionIndicator" sortDirection="ascending"/>
+			<splitter class="tree-splitter"/>
+			<treecol id="description" label="description" flex="1" persist="width ordinal hidden" onclick="sort(this)" class="sortDirectionIndicator"/>
+			<splitter class="tree-splitter"/>
+			<treecol id="weapon" label="Weapon" flex="1" persist="width ordinal hidden" onclick="sort(this)" class="sortDirectionIndicator"/>
+		</treecols>
+		<treechildren id="tree-children"/>
+	</tree>
+
 </window>
