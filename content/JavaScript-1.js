@@ -1,9 +1,19 @@
-/* Copyright (c) 2006 YourNameHere
-   See the file LICENSE.txt for licensing information. */
-//mytree = document.getElementById("mytree");
-//mytree.addEventListener("dblclick", function(event) {
-//    console.log(mytree.view.getCellText(mytree.currentIndex, mytree.columns.getColumnAt(0)));
-//}, true);
-//document.getElementById("fullname").value="susu"
-//document.getElementById("fullname").readOnly = true;
-//document.getElementById("tel").readOnly = true;
+var t = document.getElementById('mytree');
+var treeView = {
+    rowCount : 10000, //设置总行数
+    getCellText : function(row,column){//设置数据
+      if (column.id == "namecol") return "Row "+row;
+      else return "February 18";
+    },
+    setTree: function(treebox){ this.treebox = treebox; },
+    isContainer: function(row){ return false; },
+    isSeparator: function(row){ return false; },
+    isSorted: function(){ return false; },
+    getLevel: function(row){ return 0; },
+    getImageSrc: function(row,col){ return null; },
+    getRowProperties: function(row,props){},
+    getCellProperties: function(row,col,props){},
+    getColumnProperties: function(colid,col,props){}
+};
+t.view = treeView;
+console.log(t.view.getCellText(1,t.columns.getNamedColumn('lastname')));

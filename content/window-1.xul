@@ -1,40 +1,26 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-
-<window title="Tree Example" id="tree-window"
-   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-   onload="setView();">
-
-<script>
-//Moz 1.8
-var treeView = {
-    rowCount : 10000,
-    getCellText : function(row,column){
-      if (column.id == "namecol") return "Row "+row;
-      else return "February 18";
-    },
-    setTree: function(treebox){ this.treebox = treebox; },
-    isContainer: function(row){ return false; },
-    isSeparator: function(row){ return false; },
-    isSorted: function(){ return false; },
-    getLevel: function(row){ return 0; },
-    getImageSrc: function(row,col){ return null; },
-    getRowProperties: function(row,props){},
-    getCellProperties: function(row,col,props){},
-    getColumnProperties: function(colid,col,props){}
-};
-
-function setView(){
-    document.getElementById('my-tree').view = treeView;
-}
-</script>
-
-<tree id="my-tree" flex="1">
-  <treecols>
-    <treecol id="namecol" label="Name" flex="1"/>
-    <treecol id="datecol" label="Date" flex="1"/>
-  </treecols>
-  <treechildren/>
-</tree>
-
+<!DOCTYPE window>
+<window title="Sorting a custom tree view example" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <tree rows="6" id="mytree">
+        <treecols>
+            <treecol id="firstname" label="First Name" primary="true" flex="3" />
+            <treecol id="lastname" label="Last Name" flex="7" />
+        </treecols>
+        <treechildren>
+            <treeitem>
+                <treerow>
+                    <treecell label="Bob" />
+                    <treecell label="Carpenter" />
+                </treerow>
+            </treeitem>
+            <treeitem>
+                <treerow>
+                    <treecell label="Jerry" />
+                    <treecell label="Hodge" />
+                </treerow>
+            </treeitem>
+        </treechildren>
+    </tree>
+    <script type="application/javascript" src="JavaScript-1.js" />
 </window>

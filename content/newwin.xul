@@ -21,7 +21,9 @@
       <tree id="mytree" flex="6" datasources="profile:test1.sqlite" ref="*" querytype="storage">
         <treecols id="mycols">
           <treecol flex="1" label="id" />
+          <splitter class="tree-splitter" />
           <treecol flex="2" label="name" />
+          <splitter class="tree-splitter" />
           <treecol flex="3" label="tel" />
         </treecols>
         <template id="mytemplate">
