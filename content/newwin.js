@@ -1,6 +1,40 @@
 Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://gre/modules/FileUtils.jsm");
 
+function loaddata() {
+	var adata = new Array();
+	//let selectedTag = mylist.selectedItems[0].getAttribute("label");
+	var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
+	var dbConn = Services.storage.openDatabase(file); // Will also create the file if it does not exist
+	var statement = dbConn.createStatement("select * from text");
+	statement.executeAsync({
+		handleResult: function(aResultSet) {
+			for (let row = aResultSet.getNextRow(); row; row = aResultSet.getNextRow()) {
+				adata.push({
+					id: row.getResultByName("old_id"),
+					name: row.getResultByName("FullName"),
+					tel: row.getResultByName("Tel")
+				});
+			}
+		},
+		handleError: function(aError) {
+			console.log("Error: " + aError.message);
+		},
+		handleCompletion: function(aReason) {
+			if (aReason != Components.interfaces.mozIStorageStatementCallback.REASON_FINISHED) {
+				console.log("Query canceled or aborted!");
+			}
+			console.log(adata);
+		}
+	});
+	statement.finalize();
+}
+
+
+
+
+
+
 function addnew() {
 	var selectrecord = "";
 	window.openDialog('chrome://myContacts/content/update.xul', 'showmore', 'chrome,width=600,height=300', selectrecord);

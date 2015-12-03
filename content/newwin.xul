@@ -6,7 +6,7 @@
 <window id="YourApplication_window" windowtype="YourApplication" title="YourApplication" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" width="800" height="600" screenX="20" screenY="20" persist="screenX screenY width height">
   <vbox flex="1">
     <hbox>
-      <button label="New Contact" oncommand="addnew();" />
+      <button label="New Contact" oncommand="loaddata();" />
     </hbox>
     <hbox flex="1">
       <listbox id="mylist" datasources="profile:test1.sqlite" ref="*" querytype="storage">
@@ -26,20 +26,7 @@
           <splitter class="tree-splitter" />
           <treecol flex="3" label="tel" />
         </treecols>
-        <template id="mytemplate">
-          <query id="myquery">SELECT * FROM text</query>
-          <action id="myaction">
-            <treechildren>
-              <treeitem uri="?">
-                <treerow>
-                  <treecell label="?old_id" />
-                  <treecell label="?FullName" />
-                  <treecell label="?Tel" />
-                </treerow>
-              </treeitem>
-            </treechildren>
-          </action>
-        </template>
+        <treechildren id="mytreechildren" />
       </tree>
     </hbox>
   </vbox>
