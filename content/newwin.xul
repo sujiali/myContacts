@@ -7,6 +7,7 @@
 	<vbox flex="1">
 		<hbox>
 			<button label="New Contact" />
+			<button label="Reload" oncommand="cts.init();" />
 			<button label="Refresh data" oncommand="cts.refresh();" />
 		</hbox>
 		<hbox flex="1">

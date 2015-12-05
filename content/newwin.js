@@ -5,54 +5,74 @@ var cts = {
 
 	table: [],
 
-	loaddata: function(_callback) {
+	tagfilter: [],
+
+	tagidx: [],
+
+	loaddata: function() {
 		var adata = new Array();
 		// let selectedTag = mylist.selectedItems[0].getAttribute("label");
 		var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
-		var dbConn = Services.storage.openDatabase(file); // Will also create the
-		// file if it does not
-		// exist
+		var dbConn = Services.storage.openDatabase(file); // Will also create the file if it does not exist
 		var statement = dbConn.createStatement("select * from text");
-		statement.executeAsync({
-			handleResult: function(aResultSet) {
-				for (let row = aResultSet.getNextRow(); row; row = aResultSet.getNextRow()) {
-					adata.push({
-						old_id: row.getResultByName("old_id"),
-						fullname: row.getResultByName("FullName"),
-						tel: row.getResultByName("Tel")
-					});
-				}
-			},
-			handleError: function(aError) {
-				console.log("Error: " + aError.message);
-			},
-			handleCompletion: function(aReason) {
-				if (aReason != Components.interfaces.mozIStorageStatementCallback.REASON_FINISHED) {
-					console.log("Query canceled or aborted!");
-				}
-				_callback(adata);
-			}
-		});
+		while (statement.executeStep()) {
+			adata.push({
+				old_id: statement.row.old_id,
+				fullname: statement.row.FullName,
+				tel: statement.row.Tel
+			});
+		}
 		statement.finalize();
+		return adata;
 	},
+
+	gentagidx: function() {
+		var tags = new Array();
+		var adata = {};
+		// let selectedTag = mylist.selectedItems[0].getAttribute("label");
+		var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
+		var dbConn = Services.storage.openDatabase(file); // Will also create the file if it does not exist
+
+		var statement = dbConn.createStatement("SELECT tagname from tags");
+		while (statement.executeStep()) {
+			tags.push(statement.row.tagname);
+		}
+
+		for (let i = 0; i < tags.length; i++) {
+			statement.reset();
+			var tgrp = new Array();
+			var statement = dbConn.createStatement("SELECT relation.textid from relation, tags where (tags.id=relation.tagid) and (tags.tagname= :tn)");
+			statement.params.tn = tags[i];
+			while (statement.executeStep()) {
+				tgrp.push(statement.row.textid);
+			}
+			adata[tags[i]] = tgrp;
+		}
+		statement.finalize();
+		return adata;
+	},
+
 	init: function() {
-		this.loaddata(function(adata) {
-			var mytree = document.getElementById("mytree");
-			this.data = adata
-			this.table = this.data
-			// console.log(cts.table);
-			mytree.view = new treeView(this.table);
-		});
+		this.tagidx = this.gentagidx();
+		var mytree = document.getElementById("mytree");
+		this.data = this.loaddata();
+		this.table = this.data;
+		mytree.view = new treeView(this.table);
 	},
 
 	refresh: function() {
-		this.loaddata(function(adata) {
-			var mytree = document.getElementById("mytree");
-			this.data = adata
-			this.table = this.data
-			// console.log(cts.table);
-			mytree.view = new treeView(this.table);
-		});
+		var mytree = document.getElementById("mytree");
+		if (this.tagfilter.length == 0) {
+			this.table = this.data;
+		} else {
+			this.table = [];
+			for (i = 0; i < this.data.length; i++) {
+				if (this.tagfilter.contains(this.data[i].old_id)) {
+					this.table.push(this.data[i]);
+				}
+			}
+		}
+		mytree.view = new treeView(this.table);
 	},
 
 	addnew: function() {
@@ -100,10 +120,27 @@ function treeView(ttable) {
 		var selectrecord = (mytree.view.getCellText(mytree.currentIndex, mytree.columns.getColumnAt(0)));
 		window.openDialog('chrome://myContacts/content/update.xul', 'showmore', 'chrome,width=600,height=300', selectrecord);
 	}, true);
+
+	var mylist = document.getElementById("mylist");
+	mylist.addEventListener("click", function(event) {
+		let selectedTag = mylist.selectedItems[0].getAttribute("label");
+		if (selectedTag === "All") {
+			cts.tagfilter = [];
+		} else {
+			cts.tagfilter = cts.tagidx[selectedTag];
+		}
+		cts.refresh();
+	}, true);
+
 	cts.init();
 })();
 
-
-var mylist = document.getElementById("mylist");
-mylist.addEventListener("click", function(event) {
-}, true);
+Array.prototype.contains = function(obj) {
+	var i = this.length;
+	while (i--) {
+		if (this[i] === obj) {
+			return true;
+		}
+	}
+	return false;
+}
