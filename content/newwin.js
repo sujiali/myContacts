@@ -1,109 +1,75 @@
-//Components.utils.import("resource://gre/modules/Services.jsm");
-//Components.utils.import("resource://gre/modules/FileUtils.jsm");
+Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import("resource://gre/modules/FileUtils.jsm");
+var cts = {
+	data: [],
 
-data = [];
-data.push({
-	old_id: "Leonardo",
-	fullname: "Leader",
-	tel: "Dual katanas"
-});
-data.push({
-	old_id: "Michaelangelo",
-	fullname: "Party dude",
-	tel: "Nunchaku"
-});
-data.push({
-	old_id: "Donatello",
-	fullname: "Does machines",
-	tel: "Bo"
-});
-data.push({
-	old_id: "Raphael",
-	fullname: "Cool, but rude",
-	tel: "Sai"
-});
-data.push({
-	old_id: "Splinter",
-	fullname: "Rat",
-	tel: "Walking stick"
-});
-data.push({
-	old_id: "Shredder",
-	fullname: "Armored man",
-	tel: "Blades"
-});
-data.push({
-	old_id: "Casey Jones",
-	fullname: "Goalie masked man",
-	tel: "Hockey stick"
-});
-data.push({
-	old_id: "April O'Neil",
-	fullname: "Journalist",
-	tel: "None"
-});
+	table: [],
 
-//
-//function loaddata(_callback) {
-//	var adata = new Array();
-//	// let selectedTag = mylist.selectedItems[0].getAttribute("label");
-//	var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
-//	var dbConn = Services.storage.openDatabase(file); // Will also create the
-//	// file if it does not
-//	// exist
-//	var statement = dbConn.createStatement("select * from text");
-//	statement.executeAsync({
-//		handleResult: function(aResultSet) {
-//			for (let row = aResultSet.getNextRow(); row; row = aResultSet.getNextRow()) {
-//				adata.push({
-//					old_id: row.getResultByName("old_id"),
-//					fullname: row.getResultByName("FullName"),
-//					tel: row.getResultByName("Tel")
-//				});
-//			}
-//		},
-//		handleError: function(aError) {
-//			console.log("Error: " + aError.message);
-//		},
-//		handleCompletion: function(aReason) {
-//			if (aReason != Components.interfaces.mozIStorageStatementCallback.REASON_FINISHED) {
-//				console.log("Query canceled or aborted!");
-//			}
-//			_callback(adata);
-//		}
-//	});
-//	statement.finalize();
-//}
+	loaddata: function(_callback) {
+		var adata = new Array();
+		// let selectedTag = mylist.selectedItems[0].getAttribute("label");
+		var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
+		var dbConn = Services.storage.openDatabase(file); // Will also create the
+		// file if it does not
+		// exist
+		var statement = dbConn.createStatement("select * from text");
+		statement.executeAsync({
+			handleResult: function(aResultSet) {
+				for (let row = aResultSet.getNextRow(); row; row = aResultSet.getNextRow()) {
+					adata.push({
+						old_id: row.getResultByName("old_id"),
+						fullname: row.getResultByName("FullName"),
+						tel: row.getResultByName("Tel")
+					});
+				}
+			},
+			handleError: function(aError) {
+				console.log("Error: " + aError.message);
+			},
+			handleCompletion: function(aReason) {
+				if (aReason != Components.interfaces.mozIStorageStatementCallback.REASON_FINISHED) {
+					console.log("Query canceled or aborted!");
+				}
+				_callback(adata);
+			}
+		});
+		statement.finalize();
+	},
+	init: function() {
+		this.loaddata(function(adata) {
+			var mytree = document.getElementById("mytree");
+			this.data = adata
+			this.table = this.data
+			// console.log(cts.table);
+			mytree.view = new treeView(this.table);
+		});
+	},
 
-//function addnew() {
-//	var selectrecord = "";
-//	window.openDialog('chrome://myContacts/content/update.xul', 'showmore',
-//		'chrome,width=600,height=300', selectrecord);
-//}
+	refresh: function() {
+		this.loaddata(function(adata) {
+			var mytree = document.getElementById("mytree");
+			this.data = adata
+			this.table = this.data
+			// console.log(cts.table);
+			mytree.view = new treeView(this.table);
+		});
+	},
 
+	addnew: function() {
+		var selectrecord = "";
+		window.openDialog('chrome://myContacts/content/update.xul', 'showmore',
+			'chrome,width=600,height=300', selectrecord);
+	}
 
+};
 
-//function setd(data) {
-//	mytree.view = new treeView(table);
-//}
-//
-//function init() {
-//	loaddata(setd);
-//	mytree.addEventListener("dblclick", function(event) {
-//		var selectrecord = (mytree.view.getCellText(mytree.currentIndex, mytree.columns.getColumnAt(0)));
-//		window.openDialog('chrome://myContacts/content/update.xul', 'showmore', 'chrome,width=600,height=300', selectrecord);
-//	}, true);
-//}
-
-// generic custom tree view stuff
-
-function treeView(table) {
-	this.rowCount = table.length;
+function treeView(ttable) {
+	this.rowCount = ttable.length;
 	this.getCellText = function(row, col) {
-		return table[row][col.id];
+		return ttable[row][col.id];
 	};
 	this.getCellValue = function(row, col) {
-		return table[row][col.id];
+		return ttable[row][col.id];
 	};
 	this.setTree = function(treebox) {
 		this.treebox = treebox;
@@ -128,13 +94,16 @@ function treeView(table) {
 	this.getColumnProperties = function(colid, col, props) {};
 }
 
-var mytree = document.getElementById("mytree")
-mytree.view = new treeView(data);
+(function() {
+	var mytree = document.getElementById("mytree");
+	mytree.addEventListener("dblclick", function(event) {
+		var selectrecord = (mytree.view.getCellText(mytree.currentIndex, mytree.columns.getColumnAt(0)));
+		window.openDialog('chrome://myContacts/content/update.xul', 'showmore', 'chrome,width=600,height=300', selectrecord);
+	}, true);
+	cts.init();
+})();
 
-data.push({
-	old_id: "April O'Neil",
-	fullname: "Journalist",
-	tel: "None"
-});
 
-mytree.view = new treeView(data);
+var mylist = document.getElementById("mylist");
+mylist.addEventListener("click", function(event) {
+}, true);
