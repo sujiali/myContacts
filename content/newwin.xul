@@ -3,10 +3,10 @@
 "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 <?xml-stylesheet href="chrome://myContacts/skin/contacts.css" type="text/css"?>
-<window id="YourApplication_window" onload="init()" windowtype="YourApplication" title="YourApplication" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" width="800" height="600" screenX="20" screenY="20" persist="screenX screenY width height">
+<window id="YourApplication_window" windowtype="YourApplication" title="YourApplication" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" width="800" height="600" screenX="20" screenY="20" persist="screenX screenY width height">
 	<vbox flex="1">
 		<hbox>
-			<button label="New Contact" oncommand="addnew();" />
+			<button label="New Contact" />
 		</hbox>
 		<hbox flex="1">
 			<listbox id="mylist" datasources="profile:test1.sqlite" ref="*" querytype="storage">
@@ -20,11 +20,11 @@
 			</listbox>
 			<tree id="mytree" flex="6">
 				<treecols id="mycols">
-					<treecol id="old_id" flex="1" label="id" />
+					<treecol id="old_id" flex="1" label="idx" />
 					<splitter class="tree-splitter" />
-					<treecol id="fullname" flex="2" label="name" />
+					<treecol id="fullname" flex="2" label="namex" />
 					<splitter class="tree-splitter" />
-					<treecol id="tel" flex="3" label="tel" />
+					<treecol id="tel" flex="3" label="telx" />
 				</treecols>
 				<treechildren id="mytreechildren" />
 			</tree>
