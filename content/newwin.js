@@ -145,13 +145,7 @@ var cts = {
 			}
 		}
 		this.table = this.tagdata;
-		this.alphafilter = "";
-
-		//set tab
-		this.settab();
-		var tablist = document.getElementById("tablist");
-		tablist.selectedIndex = 0;
-
+		cts.settab();
 		// show tree
 		var mytree = document.getElementById("mytree");
 		mytree.view = new treeView(this.table);
@@ -178,7 +172,7 @@ var cts = {
 	},
 
 	refresh: function() {
-		
+
 		// set data
 		this.data = this.loaddata();
 		this.tagview();
@@ -190,7 +184,7 @@ var cts = {
 
 		// set tabs
 		this.settab();
-		
+
 		// show tree
 		var mytree = document.getElementById("mytree");
 		mytree.view = new treeView(this.table);
@@ -243,6 +237,11 @@ function treeView(ttable) {
 		} else {
 			cts.tagfilter = cts.tagidx[selectedTag];
 		}
+
+		cts.alphafilter = "";
+		var tablist = document.getElementById("tablist");
+		tablist.selectedIndex = 0;
+
 		cts.tagview();
 	}, true);
 
@@ -254,7 +253,7 @@ function treeView(ttable) {
 	}, true);
 
 	var reload = document.getElementById("reload");
-	newbtn.addEventListener("command", function(event) {
+	reload.addEventListener("command", function(event) {
 		cts.init();
 	}, true);
 })();
