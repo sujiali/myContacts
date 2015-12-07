@@ -1,30 +1,27 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-
 <!DOCTYPE window>
-
-<window
-	title="Sorting a custom tree view example"
-	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	onload="init()">
-	
-	<script type="application/javascript" src="sort.js"/>
-
-	<hbox align="center" id="search-box">
-		<label accesskey="F" control="filter">Filter</label>
-		<textbox id="filter" oninput="inputFilter(event)" flex="1"/>
-		<button id="clearFilter" oncommand="clearFilter()" label="Clear" accesskey="C" disabled="true"/>
-	</hbox>
-
-	<tree id="tree" flex="1" persist="sortDirection sortResource" sortDirection="ascending" sortResource="description">
-		<treecols>
-			<treecol id="name" label="Name" flex="1" persist="width ordinal hidden" onclick="sort(this)" class="sortDirectionIndicator" sortDirection="ascending"/>
-			<splitter class="tree-splitter"/>
-			<treecol id="description" label="description" flex="1" persist="width ordinal hidden" onclick="sort(this)" class="sortDirectionIndicator"/>
-			<splitter class="tree-splitter"/>
-			<treecol id="weapon" label="Weapon" flex="1" persist="width ordinal hidden" onclick="sort(this)" class="sortDirectionIndicator"/>
-		</treecols>
-		<treechildren id="tree-children"/>
-	</tree>
-
+<window title="Sorting a custom tree view example" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<tabbox id="tablist" flex="1">
+		<tabs id="mytabs" oncommand="console.log('you click me'); ">
+			<tab id="taball" label="All"  />
+			<tab id="tabA" label=" A" />
+			<tab id="tabB" label=" B" />
+		</tabs>
+		<tabpanels flex="1">
+			<tabpanel>
+				<tree id="mytree" flex="1">
+					<treecols id="mycols">
+						<treecol id="old_id" flex="1" label="idx" />
+						<splitter class="tree-splitter" />
+						<treecol id="fullname" flex="2" label="namex" />
+						<splitter class="tree-splitter" />
+						<treecol id="tel" flex="3" label="telx" />
+					</treecols>
+					<treechildren id="mytreechildren" />
+				</tree>
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
+	<script type="application/javascript" src="sort.js" />
 </window>

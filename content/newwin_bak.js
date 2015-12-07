@@ -73,13 +73,13 @@ var cts = {
 		var adata = {};
 		var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
 		var dbConn = Services.storage.openDatabase(file); // Will also create the file if it does not exist
-
+		
 		// get tags
 		var statement = dbConn.createStatement("SELECT tagname from tags");
 		while (statement.executeStep()) {
 			tags.push(statement.row.tagname);
 		}
-
+		
 		// get tagidx
 		for (let i = 0; i < tags.length; i++) {
 			statement.reset();
@@ -96,29 +96,28 @@ var cts = {
 	},
 
 	init: function() {
+		var mytree = document.getElementById("mytree");
+		var mylist = document.getElementById("mylist");
 		// set data
 		this.data = this.loaddata();
 		this.tagdata = this.data;
-		this.alphadata = this.tagdata;
-		this.table = this.alphadata;
+		this.alphadata = this.data;
+		this.table = this.data;
 
 		// set tags
 		this.tagidx = this.gentagidx();
-		var mylist = document.getElementById("mylist");
 		mylist.selectedIndex = 0;
-
+		
 		// set tabs
 		this.settab();
-		var tablist = document.getElementById("tablist");
-		tablist.selectedIndex = 0;
-
+		
 		// show tree
-		var mytree = document.getElementById("mytree");
 		mytree.view = new treeView(this.table);
 	},
 
 	settab: function() {
-		var initcaparr = this.tagdata.objprops("initcap");
+		var initcaparr = [];
+		initcaparr = this.table.objprops("initcap");
 		var uni_initcap = initcaparr.unique();
 		var allalpha = new function() {
 				var r = [];
@@ -134,67 +133,52 @@ var cts = {
 				document.getElementById("tab" + allalpha[i]).setAttribute("hidden", "true");
 			}
 		}
+		document.getElementById("tablist").selectedIndex = 0;
 	},
 
-	tagview: function() {
-		this.tagdata = [];
-		for (let i = 0; i < this.data.length; i++) {
-			var istaged = this.tagfilter.contains(this.data[i].old_id);
-			if (istaged) {
-				this.tagdata.push(this.data[i]);
-			}
+	refresh: function(whr) {
+		var mytree = document.getElementById("mytree");
+		switch (whr) {
+			case "tags":
+				this.table = [];
+				for (let i = 0; i < this.data.length; i++) {
+					var istaged = this.tagfilter.contains(this.data[i].old_id);
+					if (istaged) {
+						this.table.push(this.data[i]);
+					}
+				}
+				this.alphafilter = "";
+				this.settab();
+				break;
+			case "alphas":
+				this.table = [];
+				for (let i = 0; i < this.data.length; i++) {
+					var istaged = this.tagfilter.contains(this.data[i].old_id);
+					if (this.alphafilter == "") {
+						var isalphaed = true;
+					} else if (this.data[i].initcap.indexOf(this.alphafilter) >= 0) {
+						var isalphaed = true;
+					} else {
+						var isalphaed = false;
+					}
+					if (istaged && isalphaed) {
+						this.table.push(this.data[i]);
+					}
+				}
+				break;
+			default:
+				break;
 		}
-		this.table = this.tagdata;
-		this.alphafilter = "";
-
-		//set tab
-		this.settab();
-		var tablist = document.getElementById("tablist");
-		tablist.selectedIndex = 0;
-
-		// show tree
-		var mytree = document.getElementById("mytree");
 		mytree.view = new treeView(this.table);
+
 	},
 
-	alphaview: function() {
-
-		this.alphadata = [];
-		for (let i = 0; i < this.tagdata.length; i++) {
-			if ((this.alphafilter == "") || (this.tagdata[i].initcap.indexOf(this.alphafilter) >= 0)) {
-				var isalphaed = true;
-			} else {
-				var isalphaed = false;
-			}
-			if (isalphaed) {
-				this.alphadata.push(this.tagdata[i]);
-			}
-		}
-		this.table = this.alphadata;
-
-		// show tree
-		var mytree = document.getElementById("mytree");
-		mytree.view = new treeView(this.table);
+	addnew: function() {
+		var selectrecord = "";
+		window.openDialog('chrome://myContacts/content/update.xul', 'showmore',
+			'chrome,width=600,height=300', selectrecord);
 	},
 
-	refresh: function() {
-		
-		// set data
-		this.data = this.loaddata();
-		this.tagview();
-		this.alphaview();
-		this.table = this.alphadata;
-
-		// set tags
-		this.tagidx = this.gentagidx();
-
-		// set tabs
-		this.settab();
-		
-		// show tree
-		var mytree = document.getElementById("mytree");
-		mytree.view = new treeView(this.table);
-	},
 };
 
 function treeView(ttable) {
@@ -237,24 +221,13 @@ function treeView(ttable) {
 
 	var mylist = document.getElementById("mylist");
 	mylist.addEventListener("click", function(event) {
+		// set tagfilter
 		var selectedTag = mylist.selectedItems[0].getAttribute("label");
 		if (selectedTag === "All") {
 			cts.tagfilter = [];
 		} else {
 			cts.tagfilter = cts.tagidx[selectedTag];
 		}
-		cts.tagview();
-	}, true);
-
-	var newbtn = document.getElementById("newbtn");
-	newbtn.addEventListener("command", function(event) {
-		var selectrecord = "";
-		window.openDialog('chrome://myContacts/content/update.xul', 'showmore',
-			'chrome,width=600,height=300', selectrecord);
-	}, true);
-
-	var reload = document.getElementById("reload");
-	newbtn.addEventListener("command", function(event) {
-		cts.init();
+		cts.refresh('tags');
 	}, true);
 })();
