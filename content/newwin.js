@@ -28,18 +28,12 @@ Array.prototype.unique = function() {
     return r;
 }
 
-
-function unique(arr) {
-	var result = [],
-		hash = {};
-	for (var i = 0, elem;
-	(elem = arr[i]) != null; i++) {
-		if (!hash[elem]) {
-			result.push(elem);
-			hash[elem] = true;
-		}
+Array.prototype.props = function() {
+	var r = [];
+	for (i = 0; i < arr.length; i++) {
+		r.push(arr[i][prop]);
 	}
-	return result;
+	return r;
 }
 
 function prop2arr(arr, prop) {
@@ -63,6 +57,7 @@ var cts = {
 
 	loaddata: function() {
 		var adata = new Array();
+		
 		// let selectedTag = mylist.selectedItems[0].getAttribute("label");
 		var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
 		var dbConn = Services.storage.openDatabase(file); // Will also create the file if it does not exist
@@ -219,8 +214,6 @@ function treeView(ttable) {
 		} else {
 			cts.tagfilter = cts.tagidx[selectedTag];
 		}
-		// set alphafilter
-
 		cts.refresh('tags');
 	}, true);
 })();
