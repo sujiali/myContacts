@@ -16,6 +16,19 @@ Array.prototype.contains = function(obj) {
 	return false;
 }
 
+Array.prototype.unique = function() {
+    var r = [], hash = {};
+    for(var i=0, elem; (elem = this[i]) != null; i++)  {
+        if (!hash[elem])
+        {
+            r.push(elem);
+            hash[elem] = true;
+        }
+    }
+    return r;
+}
+
+
 function unique(arr) {
 	var result = [],
 		hash = {};
@@ -102,7 +115,7 @@ var cts = {
 	settab: function() {
 		var initcaparr = [];
 		initcaparr = prop2arr(this.table, "initcap");
-		var uni_initcap = unique(initcaparr);
+		var uni_initcap = initcaparr.unique();
 		var allalpha = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 		for (i = 0; i < allalpha.length; i++) {
 			if (uni_initcap.contains(allalpha[i])) {
