@@ -96,6 +96,10 @@ var cts = {
 	},
 
 	init: function() {
+		this.alphafilter = "";
+		this.tagfilter = [];
+		this.tagidx = this.gentagidx();
+
 		// set data
 		this.data = this.loaddata();
 		this.tagdata = this.data;
@@ -103,7 +107,7 @@ var cts = {
 		this.table = this.alphadata;
 
 		// set tags
-		this.tagidx = this.gentagidx();
+
 		var mylist = document.getElementById("mylist");
 		mylist.selectedIndex = 0;
 
@@ -144,15 +148,15 @@ var cts = {
 				this.tagdata.push(this.data[i]);
 			}
 		}
-		this.table = this.tagdata;
-		cts.settab();
+		this.alphadata = this.tagdata;
+		this.table = this.alphadata;
+		this.settab();
 		// show tree
 		var mytree = document.getElementById("mytree");
 		mytree.view = new treeView(this.table);
 	},
 
 	alphaview: function() {
-
 		this.alphadata = [];
 		for (let i = 0; i < this.tagdata.length; i++) {
 			if ((this.alphafilter == "") || (this.tagdata[i].initcap.indexOf(this.alphafilter) >= 0)) {
@@ -165,26 +169,19 @@ var cts = {
 			}
 		}
 		this.table = this.alphadata;
-
 		// show tree
 		var mytree = document.getElementById("mytree");
 		mytree.view = new treeView(this.table);
 	},
 
 	refresh: function() {
-
 		// set data
 		this.data = this.loaddata();
+		this.tagidx = this.gentagidx();
 		this.tagview();
 		this.alphaview();
-		this.table = this.alphadata;
-
-		// set tags
-		this.tagidx = this.gentagidx();
-
 		// set tabs
 		this.settab();
-
 		// show tree
 		var mytree = document.getElementById("mytree");
 		mytree.view = new treeView(this.table);
