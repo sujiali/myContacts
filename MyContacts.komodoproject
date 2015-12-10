@@ -30,11 +30,6 @@
   <string id="jshint_linter_chooser">default</string>
   <string id="jslint_linter_chooser">default</string>
   <string id="language">PHP</string>
-<preference-set id="languages">
-<preference-set id="languages/Text">
-  <string id="Text/newEncoding">utf-8</string>
-</preference-set>
-</preference-set>
   <string id="lastInvocation">Project</string>
   <string id="lastTestPlanName_pref">New test plan #1</string>
 <preference-set id="testPlans">

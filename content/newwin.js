@@ -206,23 +206,28 @@ var cts = {
 		mytree.view = new treeView(this.table);
 	},
 	copyToExcel: function() {
-		var mytree = $$("mytree")
+		var mytree = $$("mytree");
 		var start = new Object();
 		var end = new Object();
-		var r = "";
+		var rs = [];
 		var numRanges = mytree.view.selection.getRangeCount();
 		for (var t = 0; t < numRanges; t++) {
 			mytree.view.selection.getRangeAt(t, start, end);
 			for (var v = start.value; v <= end.value; v++) {
-				r = r + mytree.view.getCellText(v, mytree.columns.getColumnAt(0));
-				for (let i = 1; i < mytree.columns.count; i++) {
-					r = r + "\t" + mytree.view.getCellText(v, mytree.columns.getColumnAt(i));
+				var r = [];
+				var tColumn = mytree.columns.getFirstColumn();
+				while (tColumn) {
+					if ($$(tColumn.id).getAttribute("hidden") != "true") {
+						r.push(mytree.view.getCellText(v, tColumn));
+					}
+					tColumn = tColumn.getNext();
 				}
-				r = r + "\r\n";
+				rs.push(r.join("\t"));
 			}
 		}
-		gClipboardHelper.copyString(r);
+		gClipboardHelper.copyString(rs.join("\r\n"));
 	},
+
 	copyWithComma: function() {
 		var mytree = $$("mytree")
 		var start = new Object();
@@ -233,14 +238,72 @@ var cts = {
 			mytree.view.selection.getRangeAt(t, start, end);
 			for (var v = start.value; v <= end.value; v++) {
 				var r = [];
-				for (let i = 0; i < mytree.columns.count; i++) {
-					r.push(mytree.view.getCellText(v, mytree.columns.getColumnAt(i)));
+				var tColumn = mytree.columns.getFirstColumn();
+				while (tColumn) {
+					if ($$(tColumn.id).getAttribute("hidden") != "true") {
+						r.push(mytree.view.getCellText(v, tColumn));
+					}
+					tColumn = tColumn.getNext();
 				}
-				rs = rs + r.toString() + "\r\n"
+				rs.push(r.join("\t"));
 			}
 		}
-		gClipboardHelper.copyString(rs);
+		gClipboardHelper.copyString(rs.join("\r\n"));
 	},
+
+	tsort: function(column) {
+		var mytree = $$("mytree")
+		var columnName;
+		var order = mytree.getAttribute("sortDirection") == "ascending" ? 1 : -1;
+		//if the column is passed and it's already sorted by that column, reverse sort
+		if (column) {
+			columnName = column.id;
+			if (mytree.getAttribute("sortResource") == columnName) {
+				order *= -1;
+			}
+		} else {
+			columnName = mytree.getAttribute("sortResource");
+		}
+
+		function customSort(a, b) {
+			var s1 = prepareForComparison(a[columnName]);
+			var s2 = prepareForComparison(b[columnName]);
+			var r = 0;
+			if ((typeof s1 == "string") && (typeof s2 == "string")) {
+				if (s1.localeCompare(s2) > 0) {
+					r = 1 * order;
+				} else if (s1.localeCompare(s2) < 0) {
+					r = -1 * order;
+				} else if (s1.localeCompare(s2) == 0) {
+					r = 0 * order;
+				}
+			} else {
+				if (s1 > s2) {
+					r = 1 * order;
+				} else if (s1 < s2) {
+					r = -1 * order;
+				} else if (s1 == s2) {
+					r = 0 * order;
+				}
+			}
+			return r;
+		}
+		this.table.sort(customSort);
+		//setting these will make the sort option persist
+		mytree.setAttribute("sortDirection", order == 1 ? "ascending" : "descending");
+		mytree.setAttribute("sortResource", columnName);
+		mytree.view = new treeView(this.table);
+		//set the appropriate attributes to show to indicator
+		var cols = mytree.getElementsByTagName("treecol");
+		for (var i = 0; i < cols.length; i++) {
+			cols[i].removeAttribute("sortDirection");
+		}
+		document.getElementById(columnName).setAttribute("sortDirection", order == 1 ? "ascending" : "descending");
+	},
+
+	//prepares an object for easy comparison against another. for strings, lowercases them
+
+
 };
 
 function treeView(ttable) {
@@ -276,7 +339,8 @@ function treeView(ttable) {
 
 (function() {
 	var mytree = $$("mytree");
-	mytree.addEventListener("dblclick", function(event) {
+	var mytreechildren = $$("mytreechildren");
+	mytreechildren.addEventListener("dblclick", function(event) {
 		var selectrecord = (mytree.view.getCellText(mytree.currentIndex, mytree.columns.getColumnAt(0)));
 		window.openDialog('chrome://myContacts/content/update.xul', 'showmore', 'chrome,width=600,height=300', selectrecord);
 	}, true);
@@ -304,3 +368,10 @@ function treeView(ttable) {
 		cts.init();
 	}, true);
 })();
+
+function prepareForComparison(o) {
+	if (typeof o == "string") {
+		return o.toLowerCase();
+	}
+	return o;
+}
