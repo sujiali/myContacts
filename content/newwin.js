@@ -1,47 +1,3 @@
-Components.utils.import("resource://gre/modules/Services.jsm");
-Components.utils.import("resource://gre/modules/FileUtils.jsm");
-const gClipboardHelper = Components.classes["@mozilla.org/widget/clipboardhelper;1"]
-	.getService(Components.interfaces.nsIClipboardHelper);
-
-function $$(sId) {
-	return document.getElementById(sId);
-}
-
-Array.prototype.contains = function(obj) {
-	if (this.length == 0) {
-		return true;
-	} else {
-		var i = this.length;
-		while (i--) {
-			if (this[i] === obj) {
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
-Array.prototype.unique = function() {
-	var r = [];
-	var hash = {};
-	for (let i = 0, elem;
-	(elem = this[i]) != null; i++) {
-		if (!hash[elem]) {
-			r.push(elem);
-			hash[elem] = true;
-		}
-	}
-	return r;
-}
-
-Array.prototype.objprops = function(prop) {
-	var r = [];
-	for (let i = 0; i < this.length; i++) {
-		r.push(this[i][prop]);
-	}
-	return r;
-}
-
 var cts = {
 	data: [],
 
@@ -56,6 +12,30 @@ var cts = {
 	tagfilter: [],
 
 	tagidx: [],
+
+	init: function() {
+		// set data
+		this.loadData();
+		this.genTagIdx();
+
+		// set tags
+		this.tagfilter = [];
+		this.genTagData();
+		var mylist = $$("mylist");
+		mylist.selectedIndex = 0;
+
+		// set tabs
+		this.alphafilter = "";
+		this.genAlphaData();
+		this.setTabs();
+		var tablist = $$("tablist");
+		tablist.selectedIndex = 0;
+		this.table = this.alphadata;
+
+		// show tree
+		var mytree = $$("mytree");
+		mytree.view = new treeView(this.table);
+	},
 
 	loadData: function() {
 		this.data = [];
@@ -142,29 +122,7 @@ var cts = {
 		}
 	},
 
-	init: function() {
-		// set data
-		this.loadData();
-		this.genTagIdx();
 
-		// set tags
-		this.tagfilter = [];
-		this.genTagData();
-		var mylist = $$("mylist");
-		mylist.selectedIndex = 0;
-
-		// set tabs
-		this.alphafilter = "";
-		this.genAlphaData();
-		this.setTabs();
-		var tablist = $$("tablist");
-		tablist.selectedIndex = 0;
-		this.table = this.alphadata;
-
-		// show tree
-		var mytree = $$("mytree");
-		mytree.view = new treeView(this.table);
-	},
 
 	tagview: function() {
 		this.genTagData();
@@ -205,6 +163,7 @@ var cts = {
 		var mytree = $$("mytree");
 		mytree.view = new treeView(this.table);
 	},
+	
 	copyToExcel: function() {
 		var mytree = $$("mytree");
 		var start = new Object();
@@ -251,7 +210,7 @@ var cts = {
 		gClipboardHelper.copyString(rs.join("\r\n"));
 	},
 
-	tsort: function(column) {
+	tableSort: function(column) {
 		var mytree = $$("mytree")
 		var columnName;
 		var order = mytree.getAttribute("sortDirection") == "ascending" ? 1 : -1;
@@ -298,7 +257,7 @@ var cts = {
 		for (var i = 0; i < cols.length; i++) {
 			cols[i].removeAttribute("sortDirection");
 		}
-		document.getElementById(columnName).setAttribute("sortDirection", order == 1 ? "ascending" : "descending");
+		$$(columnName).setAttribute("sortDirection", order == 1 ? "ascending" : "descending");
 	},
 
 	//prepares an object for easy comparison against another. for strings, lowercases them
@@ -369,9 +328,6 @@ function treeView(ttable) {
 	}, true);
 })();
 
-function prepareForComparison(o) {
-	if (typeof o == "string") {
-		return o.toLowerCase();
-	}
-	return o;
+function cancelOperation() {
+	console.log("update is cancelled");
 }

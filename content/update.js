@@ -1,9 +1,6 @@
 /* Copyright (c) 2006 YourNameHere
    See the file LICENSE.txt for licensing information. */
 
-// define
-Components.utils.import("resource://gre/modules/Services.jsm");
-Components.utils.import("resource://gre/modules/FileUtils.jsm");
 var tId = window.arguments[0];
 var record = {};
 var textboxs = new Array("fullname", "tel");
@@ -18,23 +15,23 @@ var textboxSwitch = {
 
 if (tId == "") {
     // insert record;
-    document.getElementById("tid").value = "This is new one, the record id is undefine.";
+    $$("tid").value = "This is new one, the record id is undefine.";
     for (let i = 0; i < textboxs.length; i++) {
-        document.getElementById(textboxs[i]).setAttribute("class", textboxSwitch.on);
+        $$(textboxs[i]).setAttribute("class", textboxSwitch.on);
     }
-    document.getElementById("switchRead").setAttribute("label", buttonSwitch.off);
+    $$("switchRead").setAttribute("label", buttonSwitch.off);
 } else {
     // update record;
     selectRecordById(tId, function(aRecord) {
         record = aRecord;
-        document.getElementById("tid").value = "The record id is " + record.old_id;
-        document.getElementById("fullname").value = record.FullName;
-        document.getElementById("tel").value = record.Tel;
+        $$("tid").value = "The record id is " + record.old_id;
+        $$("fullname").value = record.FullName;
+        $$("tel").value = record.Tel;
         for (let i = 0; i < textboxs.length; i++) {
-            document.getElementById(textboxs[i]).readOnly = true;
-            document.getElementById(textboxs[i]).setAttribute("class", textboxSwitch.off);
+            $$(textboxs[i]).readOnly = true;
+            $$(textboxs[i]).setAttribute("class", textboxSwitch.off);
         }
-        document.getElementById("switchRead").setAttribute("label", buttonSwitch.on);
+        $$("switchRead").setAttribute("label", buttonSwitch.on);
     });
 }
 
@@ -65,17 +62,9 @@ function selectRecordById(id, _callback) {
     statement.finalize();
 }
 
-function switchStatus() {
-    for (let i = 0; i < textboxs.length; i++) {
-        document.getElementById(textboxs[i]).readOnly = !(document.getElementById(textboxs[i]).readOnly);
-        switchAttr(document.getElementById(textboxs[i]), "class", textboxSwitch);
-    }
-    switchAttr(document.getElementById("switchRead"), "label", buttonSwitch);
-}
-
 function doOK() {
-    record.FullName = document.getElementById("fullname").value;
-    record.Tel = document.getElementById("tel").value;
+    record.FullName = $$("fullname").value;
+    record.Tel = $$("tel").value;
     var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
     var fieldname = new Array();
     var dbConn = Services.storage.openDatabase(file); // Will also create the file if it does not exist
@@ -91,12 +80,22 @@ function doOK() {
     statement.params.tel = record.Tel;
     statement.execute();
     statement.finalize();
+    opener.cts.refresh();
     return true;
 }
 
 function doCancel() {
     console.log("You pressed Cancel!");
+    opener.cancelOperation();
     return true;
+}
+
+function switchStatus() {
+    for (let i = 0; i < textboxs.length; i++) {
+        $$(textboxs[i]).readOnly = !($$(textboxs[i]).readOnly);
+        switchAttr($$(textboxs[i]), "class", textboxSwitch);
+    }
+    switchAttr($$("switchRead"), "label", buttonSwitch);
 }
 
 function switchAttr(obj, attr, status_obj) {
