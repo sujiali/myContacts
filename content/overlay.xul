@@ -6,7 +6,7 @@
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 	<!-- Firefox Tools Menu -->
 	<menupopup id="menu_ToolsPopup">
-		<menuitem id="openContacts" label="Open Contacts" oncommand="openUILinkIn('chrome://myContacts/content/newwin.xul', 'tab')"></menuitem>
+		<menuitem id="openContacts" label="Open Contacts" oncommand="openUILinkIn('chrome://myContacts/content/mainwin.xul', 'tab')"></menuitem>
 		<menuitem id="testwin" label="Open Test Window" oncommand="openUILinkIn('chrome://myContacts/content/window-1.xul', 'tab')"></menuitem>
 		<menuitem id="testwin" label="Sample for sort" oncommand="openUILinkIn('chrome://myContacts/content/sort.xul', 'tab')"></menuitem>
 	</menupopup>

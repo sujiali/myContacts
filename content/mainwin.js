@@ -1,4 +1,4 @@
-var cts = {
+var mainw = {
 	data: [],
 
 	tagdata: [],
@@ -163,7 +163,7 @@ var cts = {
 		var mytree = $$("mytree");
 		mytree.view = new treeView(this.table);
 	},
-	
+
 	copyToExcel: function() {
 		var mytree = $$("mytree");
 		var start = new Object();
@@ -258,11 +258,7 @@ var cts = {
 			cols[i].removeAttribute("sortDirection");
 		}
 		$$(columnName).setAttribute("sortDirection", order == 1 ? "ascending" : "descending");
-	},
-
-	//prepares an object for easy comparison against another. for strings, lowercases them
-
-
+	}
 };
 
 function treeView(ttable) {
@@ -308,11 +304,11 @@ function treeView(ttable) {
 	mylist.addEventListener("click", function(event) {
 		var selectedTag = mylist.selectedItems[0].getAttribute("label");
 		if (selectedTag === "All") {
-			cts.tagfilter = [];
+			mainw.tagfilter = [];
 		} else {
-			cts.tagfilter = cts.tagidx[selectedTag];
+			mainw.tagfilter = mainw.tagidx[selectedTag];
 		}
-		cts.tagview();
+		mainw.tagview();
 	}, true);
 
 	var newbtn = $$("newbtn");
@@ -324,7 +320,7 @@ function treeView(ttable) {
 
 	var reload = $$("reload");
 	reload.addEventListener("command", function(event) {
-		cts.init();
+		mainw.init();
 	}, true);
 })();
 
