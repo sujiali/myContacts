@@ -7,6 +7,8 @@ var mainw = {
 
 	table: [],
 
+	textfilter: "",
+
 	alphafilter: "",
 
 	tagfilter: [],
@@ -44,6 +46,7 @@ var mainw = {
 		var statement = dbConn.createStatement("select * from text");
 		while (statement.executeStep()) {
 			this.data.push({
+				selectbox: "false",
 				old_id: statement.row.old_id,
 				fullname: statement.row.FullName,
 				tel: statement.row.Tel,
@@ -89,6 +92,23 @@ var mainw = {
 		}
 	},
 
+	tagview: function() {
+		this.genTagData();
+
+		this.alphafilter = "";
+		this.genAlphaData();
+		this.setTabs();
+		var tablist = $$("tablist");
+		tablist.selectedIndex = 0;
+		this.table = this.alphadata;
+
+		// show tree
+		var mytree = $$("mytree");
+		mytree.view = new treeView(this.table);
+	},
+
+
+
 	genAlphaData: function() {
 		this.alphadata = [];
 		for (let i = 0; i < this.tagdata.length; i++) {
@@ -104,7 +124,7 @@ var mainw = {
 	},
 
 	setTabs: function() {
-		var initcaparr = this.tagdata.objprops("initcap");
+		var initcaparr = this.tagdata.getobjprops("initcap");
 		var uni_initcap = initcaparr.unique();
 		var allalpha = new function() {
 				var r = [];
@@ -120,23 +140,6 @@ var mainw = {
 				$$("tab" + allalpha[i]).setAttribute("hidden", "true");
 			}
 		}
-	},
-
-
-
-	tagview: function() {
-		this.genTagData();
-
-		this.alphafilter = "";
-		this.genAlphaData();
-		this.setTabs();
-		var tablist = $$("tablist");
-		tablist.selectedIndex = 0;
-		this.table = this.alphadata;
-
-		// show tree
-		var mytree = $$("mytree");
-		mytree.view = new treeView(this.table);
 	},
 
 	alphaview: function() {
@@ -164,6 +167,11 @@ var mainw = {
 		mytree.view = new treeView(this.table);
 	},
 
+	updateCancelled: function() {
+		console.log("update is cancelled");
+	},
+
+	/* copy */
 	copyToExcel: function() {
 		var mytree = $$("mytree");
 		var start = new Object();
@@ -209,6 +217,8 @@ var mainw = {
 		}
 		gClipboardHelper.copyString(rs.join("\r\n"));
 	},
+
+	/* table sort  */
 
 	tableSort: function(column) {
 		var mytree = $$("mytree")
@@ -256,8 +266,74 @@ var mainw = {
 		var cols = mytree.getElementsByTagName("treecol");
 		for (var i = 0; i < cols.length; i++) {
 			cols[i].removeAttribute("sortDirection");
-		}
+		};
 		$$(columnName).setAttribute("sortDirection", order == 1 ? "ascending" : "descending");
+	},
+
+	/* checkbox is all set to true or false */
+
+	allChecked: function() {
+		//var statusarr = this.table.getobjprops("selectbox");
+		var statusarr = this.table.map(function(obj) {
+			return obj["selectbox"];
+		})
+		var status = statusarr.unique();
+		if ((status.length == 1) && (status[0] == "true")) {
+			// also can be done by Array.prototype.setobjprops
+			this.table.map(function(obj) {
+				obj["selectbox"] = "false";
+			})
+		} else {
+			this.table.map(function(obj) {
+				obj["selectbox"] = "true";
+			})
+		}
+	},
+
+	/* Filter with text  */
+
+	inputFilter: function(event) {
+		this.textfilter = prepareForComparison(event.target.value);
+		this.setFilter();
+		$$("clearFilter").disabled = this.textfilter.length == 0;
+		$$("mytree").view = new treeView(this.table);
+	},
+
+	clearFilter: function() {
+		var filterElement = $$("filter");
+		filterElement.focus();
+		filterElement.value = "";
+		this.textfilter = "";
+		this.setFilter();
+		$$("clearFilter").disabled = true;
+		$$("mytree").view = new treeView(this.table);
+	},
+
+	setFilter: function(text) {
+		//this.textfilter = text;
+		if (this.textfilter == "") {
+			this.table = this.data;
+		} else {
+			//filter out the ones we want to display
+			this.table = [];
+			for (let i = 0; i < this.data.length; i++) {
+				for (let j in this.data[i]) {
+					if (prepareForComparison(this.data[i][j]).indexOf(this.textfilter) != -1) {
+						this.table.push(this.data[i]);
+						break;
+					}
+				}
+			}
+			// this will not use the filter prototype of Array, cause the filter var must come from outside of anonymous function 
+			//this.table = this.data.filter(function(obj) {
+			//	for (let j in obj) {
+			//		if (prepareForComparison(obj[j]).indexOf(mainw.textfilter) != -1) {
+			//			return true;
+			//		}
+			//	};
+			//	return false;
+			//})
+		}
 	}
 };
 
@@ -267,6 +343,9 @@ function treeView(ttable) {
 		return ttable[row][col.id];
 	};
 	this.getCellValue = function(row, col) {
+		return ttable[row][col.id];
+	};
+	this.setCellValue = function(row, col) {
 		return ttable[row][col.id];
 	};
 	this.setTree = function(treebox) {
@@ -284,6 +363,16 @@ function treeView(ttable) {
 	this.getLevel = function(row) {
 		return 0;
 	};
+	this.cycleHeader = function(col) {
+		console.log(col.id + " is being clicked");
+	};
+	this.isEditable = function(row, col) {
+		if (col.id == "selectbox") {
+			return true;
+		} else {
+			return false;
+		}
+	};
 	this.getImageSrc = function(row, col) {
 		return null;
 	};
@@ -296,8 +385,21 @@ function treeView(ttable) {
 	var mytree = $$("mytree");
 	var mytreechildren = $$("mytreechildren");
 	mytreechildren.addEventListener("dblclick", function(event) {
-		var selectrecord = (mytree.view.getCellText(mytree.currentIndex, mytree.columns.getColumnAt(0)));
+		var selectrecord = mytree.view.getCellText(mytree.currentIndex, mytree.columns.getNamedColumn("old_id"));
 		window.openDialog('chrome://myContacts/content/update.xul', 'showmore', 'chrome,width=600,height=300', selectrecord);
+	}, true);
+	mytreechildren.addEventListener("click", function(event) {
+		var b = this.parentNode.treeBoxObject;
+		var cell = b.getCellAt(event.clientX, event.clientY);
+		// console.log(cell);
+		var status = mytree.view.getCellText(cell.row, mytree.columns.getNamedColumn("selectbox"));
+		if (cell.col.id == "selectbox") {
+			if (status == "true") {
+				mainw.table[cell.row]["selectbox"] = "false";
+			} else if (status == "false") {
+				mainw.table[cell.row]["selectbox"] = "true";
+			}
+		}
 	}, true);
 
 	var mylist = $$("mylist");
@@ -323,7 +425,3 @@ function treeView(ttable) {
 		mainw.init();
 	}, true);
 })();
-
-function cancelOperation() {
-	console.log("update is cancelled");
-}

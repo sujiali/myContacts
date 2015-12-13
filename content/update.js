@@ -22,7 +22,7 @@ var updatew = {
         var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
         var dbConn = Services.storage.openDatabase(file); // Will also create the file if it does not exist
         var statement = dbConn.createStatement("select * from text where old_id= :id");
-        statement.params.id = id;
+        statement.params.id = this.tId;
         while (statement.executeStep()) {
             this.record.old_id = statement.row.old_id;
             this.record.FullName = statement.row.FullName;
@@ -33,70 +33,62 @@ var updatew = {
     },
 
     init: function() {
-        tId = window.arguments[0];
-        if (tId == "") {
+        this.tId = window.arguments[0];
+        if (this.tId == "") {
             // insert record;
             $$("tid").value = "This is new one, the record id is undefine.";
-            for (let i = 0; i < textboxs.length; i++) {
-                $$(textboxs[i]).setAttribute("class", textboxSwitch.on);
+            for (let i = 0; i < this.textboxs.length; i++) {
+                $$(this.textboxs[i]).setAttribute("class", this.textboxSwitch.on);
             }
-            $$("switchRead").setAttribute("label", buttonSwitch.off);
+            $$("switchRead").setAttribute("label", this.buttonSwitch.off);
         } else {
             // update record;
-            selectRecordById(tId)
-            $$("tid").value = "The record id is " + record.old_id;
-            $$("fullname").value = record.FullName;
-            $$("tel").value = record.Tel;
-            for (let i = 0; i < textboxs.length; i++) {
-                $$(textboxs[i]).readOnly = true;
-                $$(textboxs[i]).setAttribute("class", textboxSwitch.off);
+            this.selectRecordById();
+            $$("tid").value = "The record id is " + this.record.old_id;
+            $$("fullname").value = this.record.FullName;
+            $$("tel").value = this.record.Tel;
+            for (let i = 0; i < this.textboxs.length; i++) {
+                $$(this.textboxs[i]).readOnly = true;
+                $$(this.textboxs[i]).setAttribute("class", this.textboxSwitch.off);
             }
-            $$("switchRead").setAttribute("label", buttonSwitch.on);
+            $$("switchRead").setAttribute("label", this.buttonSwitch.on);
         }
+    },
+
+    switchStatus: function() {
+        for (let i = 0; i < this.textboxs.length; i++) {
+            $$(this.textboxs[i]).readOnly = !($$(this.textboxs[i]).readOnly);
+            switchAttr($$(this.textboxs[i]), "class", this.textboxSwitch);
+        }
+        switchAttr($$("switchRead"), "label", this.buttonSwitch);
+    },
+
+    doOK: function() {
+        this.record.FullName = $$("fullname").value;
+        this.record.Tel = $$("tel").value;
+        var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
+        var fieldname = new Array();
+        var dbConn = Services.storage.openDatabase(file); // Will also create the file if it does not exist
+        if (this.tId == "") {
+            // new one
+            var statement = dbConn.createStatement("insert into text (FullName, Tel) values (:fn, :tel)");
+        } else {
+            // already exsit
+            var statement = dbConn.createStatement("update text set FullName = :fn, Tel = :tel where old_id = :id");
+            statement.params.id = this.record.old_id;
+        }
+        statement.params.fn = this.record.FullName;
+        statement.params.tel = this.record.Tel;
+        statement.execute();
+        statement.finalize();
+        opener.mainw.refresh();
+        return true;
+    },
+
+    doCancel: function() {
+        console.log("You pressed Cancel!");
+        opener.mainw.updateCancelled();
+        return true;
     }
 
 };
-
-function doOK() {
-    record.FullName = $$("fullname").value;
-    record.Tel = $$("tel").value;
-    var file = FileUtils.getFile("ProfD", ["test1.sqlite"]);
-    var fieldname = new Array();
-    var dbConn = Services.storage.openDatabase(file); // Will also create the file if it does not exist
-    if (tId == "") {
-        // new one
-        var statement = dbConn.createStatement("insert into text (FullName, Tel) values (:fn, :tel)");
-    } else {
-        // already exsit
-        var statement = dbConn.createStatement("update text set FullName = :fn, Tel = :tel where old_id = :id");
-        statement.params.id = record.old_id;
-    }
-    statement.params.fn = record.FullName;
-    statement.params.tel = record.Tel;
-    statement.execute();
-    statement.finalize();
-    opener.mainw.refresh();
-    return true;
-}
-
-function doCancel() {
-    console.log("You pressed Cancel!");
-    opener.cancelOperation();
-    return true;
-}
-
-function switchStatus() {
-    for (let i = 0; i < textboxs.length; i++) {
-        $$(textboxs[i]).readOnly = !($$(textboxs[i]).readOnly);
-        switchAttr($$(textboxs[i]), "class", textboxSwitch);
-    }
-    switchAttr($$("switchRead"), "label", buttonSwitch);
-}
-
-function switchAttr(obj, attr, status_obj) {
-    if (obj.getAttribute(attr) == status_obj.on) {
-        obj.setAttribute(attr, status_obj.off);
-    } else if (obj.getAttribute(attr) == status_obj.off) {
-        obj.setAttribute(attr, status_obj.on);
-    }
-}

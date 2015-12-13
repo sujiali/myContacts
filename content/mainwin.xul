@@ -28,10 +28,10 @@
 			<vbox flex="1">
 				<hbox align="center" id="search-box">
 					<label accesskey="F" control="filter">Filter</label>
-					<textbox id="filter" oninput="inputFilter(event)" flex="1" />
-					<button id="clearFilter" oncommand="clearFilter()" label="Clear" accesskey="C" disabled="true" />
+					<textbox id="filter" oninput="mainw.inputFilter(event)" flex="1" />
+					<button id="clearFilter" oncommand="mainw.clearFilter()" label="Clear" accesskey="C" disabled="true" />
 				</hbox>
-				<tabbox id="tablist" flex="1">
+				<tabbox id="tablist" flex="3">
 					<tabs id="mytabs">
 						<tab id="taball" label="All" oncommand="mainw.alphafilter=''; mainw.alphaview()" />
 						<tab id="tabA" label=" A" oncommand="mainw.alphafilter='A'; mainw.alphaview()" />
@@ -64,8 +64,9 @@
 					</tabs>
 					<tabpanels flex="1">
 						<tabpanel>
-							<tree id="mytree" flex="1" persist="sortDirection sortResource" sortDirection="ascending" enableColumnDrag="true" sortResource="old_id">
+							<tree id="mytree" flex="1" persist="sortDirection sortResource" sortDirection="ascending" enableColumnDrag="true" sortResource="old_id" editable="true">
 								<treecols id="mycols">
+									<treecol id="selectbox" type="checkbox" editable="true" onclick="mainw.allChecked();" />
 									<treecol id="old_id" flex="1" label="old_idx" persist="width ordinal hidden" class="sortDirectionIndicator" onclick="mainw.tableSort(this)" sortDirection="ascending" />
 									<splitter class="tree-splitter" />
 									<treecol id="fullname" flex="1" label="FullNamex" persist="width ordinal hidden" class="sortDirectionIndicator" onclick="mainw.tableSort(this)" />
@@ -75,6 +76,17 @@
 								<treechildren context="mytreechildrenmenu" id="mytreechildren" />
 							</tree>
 						</tabpanel>
+					</tabpanels>
+				</tabbox>
+				<splitter />
+				<tabbox id="tablist" flex="1">
+					<tabs>
+						<tab label="Preview" />
+						<tab label="Export table" />
+					</tabs>
+					<tabpanels flex="1">
+						<tabpanel></tabpanel>
+						<tabpanel></tabpanel>
 					</tabpanels>
 				</tabbox>
 			</vbox>

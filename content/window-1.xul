@@ -1,6 +1,14 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<!DOCTYPE window>
-<window title="Sorting a custom tree view example" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-	<script type="application/javascript" src="JavaScript-1.js" />
+<?xml-stylesheet href="chrome://myContacts/skin/contacts.css" type="text/css"?>
+<window title="Tree Example" id="tree-window" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" onload="setview();">
+	<tree id="my-tree" flex="1" editable="true">
+		<treecols>
+			<treecol id="selectbox" type="checkbox" editable="true" />
+			<treecol id="namecol" label="Name" flex="1" />
+			<treecol id="datecol" label="Date" flex="1" />
+		</treecols>
+		<treechildren id="mytreechildren" />
+	</tree>
+	<script type="application/x-javascript" src="window-1.js" />
 </window>

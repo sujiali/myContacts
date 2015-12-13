@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://myContacts/skin/contacts.css" type="text/css"?>
+<!DOCTYPE window>
+<window title="Sorting a custom tree view example" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <tree flex="1" editable="true">
+        <treecols>
+            <treecol label="Active" type="checkbox" editable="true" />
+            <treecol label="Name" flex="1" />
+        </treecols>
+        <treechildren>
+            <treeitem>
+                <treerow>
+                    <treecell value="true" />
+                    <treecell label="Alice" />
+                </treerow>
+            </treeitem>
+            <treeitem>
+                <treerow>
+                    <treecell value="false" />
+                    <treecell label="Bob" />
+                </treerow>
+            </treeitem>
+        </treechildren>
+    </tree>
+    <script type="application/javascript" src="JavaScript-1.js" />
+</window>

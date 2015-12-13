@@ -1,5 +1,3 @@
-/* Copyright (c) 2006 YourNameHere
-   See the file LICENSE.txt for licensing information. */
 var table = null;
 var data = null;
 var tree;
